@@ -35,3 +35,33 @@ jobs:
         with:
           path: /opt/hostedtoolcache/starknet-foundry/${{ env.STARKNET_FOUNDRY_VERSION }}/x86_64-unknown-linux-gnu
           key: snfoundry-${{ env.STARKNET_FOUNDRY_VERSION }}-x86_64-unknown-linux-gnu
+  check-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore Starknet Foundry installation from cache
+        uses: actions/cache@v4
+        id: cache-snfoundry
+        with:
+          path: /opt/hostedtoolcache/starknet-foundry/${{ env.STARKNET_FOUNDRY_VERSION }}/x86_64-unknown-linux-gnu
+          key: snfoundry-${{ env.STARKNET_FOUNDRY_VERSION }}-x86_64-unknown-linux-gnu
+
+      - name: Setup Starknet Foundry
+        if: steps.cache-snfoundry.outputs.cache-hit != 'true'
+        id: setup-snfoundry
+        uses: foundry-rs/setup-snfoundry@v3
+        with:
+          starknet-foundry-version: ${{ env.STARKNET_FOUNDRY_VERSION }}
+
+      - name: Add Starknet Foundry to PATH
+        if: steps.cache-snfoundry.outputs.cache-hit == 'true'
+        run: echo "/opt/hostedtoolcache/starknet-foundry/${{ env.STARKNET_FOUNDRY_VERSION }}/x86_64-unknown-linux-gnu/bin" >> $GITHUB_PATH
+
+      - run: snforge --version
+
+      - name: Cache Starknet Foundry
+        if: steps.cache-snfoundry.outputs.cache-hit != 'true'
+        uses: actions/cache@v4
+        with:
+          path: /opt/hostedtoolcache/starknet-foundry/${{ env.STARKNET_FOUNDRY_VERSION }}/x86_64-unknown-linux-gnu
+          key: snfoundry-${{ env.STARKNET_FOUNDRY_VERSION }}-x86_64-unknown-linux-gnu
