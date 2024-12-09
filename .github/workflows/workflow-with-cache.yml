@@ -1,6 +1,5 @@
 name: My workflow
 on:
-  push:
   pull_request:
 env:
   STARKNET_FOUNDRY_VERSION: 0.34.0
