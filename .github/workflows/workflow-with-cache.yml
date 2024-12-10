@@ -17,4 +17,4 @@ jobs:
           scarb-lock: ./hello_starknet/Scarb.lock
 
       - name: Run tests
-        run: snforge test
+        run: cd hello_starknet && snforge test
