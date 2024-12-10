@@ -20,5 +20,9 @@ jobs:
         with:
           scarb-lock: ./hello_starknet/Scarb.lock
 
+      - name: Display dirs
+        run: cd ~ && ls
+        run: cd .cargo && ls
+
       - name: Run tests
         run: cd hello_starknet && snforge test
